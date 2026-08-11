@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   CoreStone Technologies — Design Tokens
+   Palette: deep corporate navy-blue + energetic signal-orange, on a cool
+   light-slate background (not cream/terracotta, not near-black+neon).
+   Type: Space Grotesk (display) + Inter (body) + IBM Plex Mono (data/stat).
+   ========================================================================== */
+@theme {
+  /* Brand core - High contrast energetic electric blue & vibrant emerald */
+  --color-brand-primary-50:  #EFF6FF;
+  --color-brand-primary-100: #DBEAFE;
+  --color-brand-primary-200: #BFDBFE;
+  --color-brand-primary-300: #93C5FD;
+  --color-brand-primary-400: #60A5FA;
+  --color-brand-primary-500: #3B82F6;
+  --color-brand-primary-600: #1D4ED8;   /* Electric Royal Blue */
+  --color-brand-primary-700: #1E40AF;   /* Primary Hover */
+  --color-brand-primary-800: #1E3A8A;
+  --color-brand-primary-900: #172554;
+  --color-brand-primary-950: #0F172A;
+
+  --color-brand-accent-50:  #ECFDF5;
+  --color-brand-accent-100: #D1FAE5;
+  --color-brand-accent-200: #A7F3D0;
+  --color-brand-accent-300: #6EE7B7;
+  --color-brand-accent-400: #34D399;
+  --color-brand-accent-500: #10B981;   /* Accent Emerald */
+  --color-brand-accent-600: #059669;   /* Accent Hover */
+  --color-brand-accent-700: #047857;
+  --color-brand-accent-800: #065F46;
+  --color-brand-accent-900: #064E3B;
+  --color-brand-accent-950: #022C22;
+
+  /* Neutrals — Ultra-High Contrast Ink Text */
+  --color-ink-950: #020617;
+  --color-ink-900: #020617; /* Deepest Bold Black/Navy Heading */
+  --color-ink-800: #0F172A; /* High Contrast Primary Text */
+  --color-ink-700: #1E293B; /* High Contrast Subtext */
+  --color-ink-600: #1E293B; /* Crisp Dark Body Text */
+  --color-ink-500: #334155; /* Sharp Secondary Text */
+  --color-ink-400: #64748B;
+  --color-ink-300: #94A3B8;
+  --color-ink-200: #CBD5E1; /* Border */
+  --color-ink-100: #E2E8F0;
+  --color-ink-50:  #F8FAFC; /* Background */
+
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F8FAFC;
+  --color-surface-sunken: #F1F5F9;
+
+  --color-success: #16A34A;
+  --color-error: #DC2626;
+  --color-warning: #F59E0B;
+
+  /* Fonts */
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Inter", ui-monospace, monospace;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-pill: 999px;
+  --radius-button: 12px;
+  --radius-input: 12px;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lifted: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+
+  --animate-marquee: marquee 32s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink-600);
+  background: var(--color-ink-50);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-ink-900);
+  font-weight: 700;
+}
+
+::selection {
+  background: var(--color-brand-primary-200);
+  color: var(--color-ink-950);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-primary-600);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.container-page {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .container-page {
+    padding-inline: 2rem;
+  }
+}
+

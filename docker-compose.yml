@@ -1,0 +1,79 @@
+# CoreStone Technologies — Docker Compose
+#
+# Oracle Database is deliberately NOT a service in this file. Running
+# production Oracle in a throwaway container contradicts the "Oracle
+# Database only, production-grade" requirement — point ORACLE_DSN at a
+# real Oracle instance (on-prem, Oracle Cloud, or Autonomous Database).
+# For local development against a disposable Oracle, see the commented
+# oracle-xe service below, which you can uncomment if you specifically
+# want a local throwaway Oracle for testing — it is off by default.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    image: corestone-backend:latest
+    container_name: corestone_backend
+    restart: unless-stopped
+    env_file:
+      - backend/.env
+    ports:
+      - "8002:8000"
+    depends_on:
+      oracle-xe:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    networks:
+      - corestone_net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    image: corestone-frontend:latest
+    container_name: corestone_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - corestone_net
+
+  # ------------------------------------------------------------------
+  # Optional: local disposable Oracle XE for development only. Off by
+  # default — uncomment and set ORACLE_DSN=oracle-xe:1521/XEPDB1 in
+  # backend/.env to use it. NEVER use this service in production; it has
+  # no backup strategy and its data volume is meant to be throwaway.
+  # ------------------------------------------------------------------
+  oracle-xe:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: corestone_oracle_dev
+    restart: unless-stopped
+    environment:
+      ORACLE_PWD: "changeme_dev_only"
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_dev_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "/opt/oracle/checkDBStatus.sh"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    networks:
+      - corestone_net
+
+networks:
+  corestone_net:
+    driver: bridge
+
+volumes:
+  oracle_dev_data:

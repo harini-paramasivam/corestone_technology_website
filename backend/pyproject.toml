@@ -1,0 +1,6 @@
+[tool.ruff.lint]
+# B008: "function call in default argument" — this is FastAPI's own
+# documented dependency-injection idiom (`db: Session = Depends(get_db)`),
+# not a real bug. Every endpoint and dependency in this codebase uses it
+# intentionally; flagging it produces noise, not signal.
+ignore = ["B008"]

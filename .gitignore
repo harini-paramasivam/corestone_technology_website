@@ -1,0 +1,32 @@
+# CoreStone Technologies — Global Git Ignore
+
+# Node dependencies & build outputs
+node_modules/
+dist/
+build/
+.output/
+
+# Python / Virtual Environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment files with secrets
+backend/.env
+frontend/.env
+.env.local
+*.log
+
+# Docker data volumes
+oracle_data/

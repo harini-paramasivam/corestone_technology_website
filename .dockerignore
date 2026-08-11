@@ -1,0 +1,20 @@
+# CoreStone Technologies — Docker ignore file
+# Excludes large/unnecessary paths from the Docker build context
+
+# Frontend build artifacts (Docker builds these fresh via npm run build)
+frontend/dist/
+frontend/node_modules/
+
+# Backend dev artifacts
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.pytest_cache/
+
+# Dev & editor files
+.git/
+.gitignore
+*.md
+.env.local
+.env.*.local
+**/.DS_Store
