@@ -37,6 +37,7 @@ export default function RequestDemo() {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -63,8 +64,13 @@ export default function RequestDemo() {
     let whatsappSent = false
     let whatsappStatus = 'NOT_CONFIGURED'
 
+    const payloadValues = {
+      ...values,
+      preferredDemoTime: values.preferredDemoTime === 'custom' && values.customDemoTime ? values.customDemoTime : values.preferredDemoTime,
+    }
+
     try {
-      const res = await submitDemoRequest(values, language)
+      const res = await submitDemoRequest(payloadValues, language)
       const leadId = res?.lead_id || ('CS-' + Date.now().toString(36).toUpperCase())
       const whatsappSent = res?.whatsapp_sent || false
       const whatsappStatus = res?.whatsapp_status || 'NOT_CONFIGURED'
@@ -104,7 +110,7 @@ export default function RequestDemo() {
               <Input
                 label={t('forms.fullName')}
                 required
-                placeholder="Harini Paramasivam"
+                placeholder="John Doe"
                 error={errors.fullName?.message}
                 {...register('fullName')}
               />
@@ -241,6 +247,16 @@ export default function RequestDemo() {
                 )}
               />
             </div>
+
+            {watch('preferredDemoTime') === 'custom' && (
+              <Input
+                label="Specify Custom Timing"
+                required
+                placeholder="e.g. 09:15 AM or 06:30 PM"
+                error={errors.customDemoTime?.message}
+                {...register('customDemoTime')}
+              />
+            )}
 
             <Button type="submit" size="lg" className="w-full" loading={submitting} icon={Send}>
               {submitting ? t('common.submitting') : t('common.requestDemo')}

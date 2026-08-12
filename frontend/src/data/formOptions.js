@@ -21,6 +21,7 @@ export const DEMO_TIME_SLOTS = [
   { value: '14:30', label: '2:30 PM' },
   { value: '16:00', label: '4:00 PM' },
   { value: '17:30', label: '5:30 PM' },
+  { value: 'custom', label: 'Other / Specify Custom Time' },
 ]
 
 export const INDIAN_STATES = [

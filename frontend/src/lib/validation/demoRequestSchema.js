@@ -51,6 +51,7 @@ export function createDemoRequestSchema(t) {
         return selected >= today
       }, v('datePast')),
     preferredDemoTime: z.string().min(1, v('timeRequired')),
+    customDemoTime: z.string().optional(),
     demoMode: z.string().min(1, v('modeRequired')),
   })
 }
