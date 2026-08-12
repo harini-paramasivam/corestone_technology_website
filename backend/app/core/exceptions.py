@@ -6,6 +6,7 @@ keeping the service layer framework-agnostic. The handlers registered here
 translate them into consistent JSON error responses.
 """
 from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -73,7 +74,7 @@ def register_exception_handlers(app: FastAPI) -> None:
             content={
                 "success": False,
                 "error": "Validation failed.",
-                "details": exc.errors(),
+                "details": jsonable_encoder(exc.errors()),
                 "path": request.url.path,
             },
         )
