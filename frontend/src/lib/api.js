@@ -20,8 +20,13 @@ api.interceptors.response.use(
     }
 
     const status = error.response?.status
+    const backendMsg = error.response?.data?.error
 
-    // Never expose raw "Not Found", "Internal Server Error", etc.
+    // Prefer a backend-provided, user-friendly error message if present
+    if (backendMsg && typeof backendMsg === 'string' && !backendMsg.toLowerCase().includes('internal')) {
+      return Promise.reject(new Error(backendMsg))
+    }
+
     if (status === 404) {
       return Promise.reject(new Error('Service temporarily unavailable. Please try again shortly.'))
     }
@@ -30,12 +35,6 @@ api.interceptors.response.use(
     }
     if (status === 500 || status === 502 || status === 503) {
       return Promise.reject(new Error('The server encountered an error. Please try again in a moment.'))
-    }
-
-    // Prefer a backend-provided, user-friendly error message if present
-    const backendMsg = error.response?.data?.error
-    if (backendMsg && typeof backendMsg === 'string' && !backendMsg.toLowerCase().includes('internal')) {
-      return Promise.reject(new Error(backendMsg))
     }
 
     return Promise.reject(new Error('Something went wrong. Please try again.'))

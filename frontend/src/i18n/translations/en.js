@@ -168,6 +168,7 @@ export default {
     selectState: 'Select your state',
     selectTime: 'Select time',
     selectMode: 'Select mode',
+    errorTitle: 'Submission Failed',
 
     validation: {
       nameRequired: 'Enter your full name.',
