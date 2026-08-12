@@ -26,22 +26,24 @@ from app.core.config import get_settings
 settings = get_settings()
 
 
-class OracleConfigurationError(RuntimeError):
-    """Raised when a connection is attempted without Oracle configured."""
+class DatabaseConfigurationError(RuntimeError):
+    """Raised when a connection is attempted without PostgreSQL or Oracle configured."""
 
 
 def _build_database_url() -> str:
     """
-    Builds the Oracle SQLAlchemy URL from discrete settings.
-
-    Required env vars (see backend/.env.example):
-        ORACLE_USER, ORACLE_PASSWORD, ORACLE_DSN
-
-    ORACLE_DSN accepts either:
-        host:port/service_name        e.g. "localhost:1521/XEPDB1"
-        a full TNS alias / Easy Connect Plus string
-        a wallet-based connect string (Oracle Autonomous DB)
+    Returns DATABASE_URL if configured (e.g. Supabase PostgreSQL),
+    otherwise falls back to discrete Oracle configuration settings.
     """
+    if settings.DATABASE_URL:
+        url = settings.DATABASE_URL.strip()
+        # Convert postgres:// to postgresql:// or postgresql+psycopg2:// if needed
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif url.startswith("postgresql://") and not url.startswith("postgresql+"):
+            url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        return url
+
     missing = [
         name
         for name, value in (
@@ -52,14 +54,9 @@ def _build_database_url() -> str:
         if not value
     ]
     if missing:
-        raise OracleConfigurationError(
-            "Oracle Database is not configured. Missing environment "
-            f"variable(s): {', '.join(missing)}. This project targets Oracle "
-            "Database exclusively — there is no fallback database. Set these "
-            "in backend/.env (see backend/.env.example) or as platform "
-            "environment variables before starting the API. See "
-            "ORACLE_APEX_SETUP.md for provisioning a local Oracle XE instance "
-            "or connecting to an Oracle Autonomous Database wallet."
+        raise DatabaseConfigurationError(
+            "Database is not configured. Missing DATABASE_URL (for PostgreSQL/Supabase) "
+            f"or Oracle environment variable(s): {', '.join(missing)}."
         )
 
     return (
@@ -70,14 +67,23 @@ def _build_database_url() -> str:
 
 @lru_cache
 def get_engine() -> Engine:
-    """Builds (once) and returns the Oracle engine. Raises if unconfigured."""
+    """Builds (once) and returns the SQLAlchemy engine. Raises if unconfigured."""
     database_url = _build_database_url()
-    return create_engine(
-        database_url,
-        pool_pre_ping=True,
-        pool_size=settings.ORACLE_POOL_MIN,
-        max_overflow=max(settings.ORACLE_POOL_MAX - settings.ORACLE_POOL_MIN, 0),
-    )
+    is_postgres = database_url.startswith("postgresql")
+    
+    engine_kwargs = {
+        "pool_pre_ping": True,
+    }
+    if is_postgres:
+        # Supabase transaction pooler (port 6543) works best with statement preparation disabled
+        # and standard connection pooling parameters
+        engine_kwargs["pool_size"] = getattr(settings, "POSTGRES_POOL_SIZE", 10)
+        engine_kwargs["max_overflow"] = getattr(settings, "POSTGRES_MAX_OVERFLOW", 5)
+    else:
+        engine_kwargs["pool_size"] = settings.ORACLE_POOL_MIN
+        engine_kwargs["max_overflow"] = max(settings.ORACLE_POOL_MAX - settings.ORACLE_POOL_MIN, 0)
+
+    return create_engine(database_url, **engine_kwargs)
 
 
 @lru_cache

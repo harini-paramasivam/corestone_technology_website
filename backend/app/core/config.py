@@ -42,9 +42,8 @@ class Settings(BaseSettings):
     def BACKEND_CORS_ORIGINS(self) -> list[str]:
         return [origin.strip() for origin in self.BACKEND_CORS_ORIGINS_RAW.split(",") if origin.strip()]
 
-    # --- Database (Oracle) ---
-    # Populated fully in Module 7/8. Kept here now so config wiring is complete
-    # from day one and nothing needs to be retrofitted later.
+    # --- Database (PostgreSQL / Supabase or Oracle) ---
+    DATABASE_URL: str = ""  # e.g. "postgresql+psycopg2://postgres:pass@db.xxx.supabase.co:5432/postgres"
     ORACLE_USER: str = ""
     ORACLE_PASSWORD: str = ""
     ORACLE_DSN: str = ""  # e.g. "host:1521/servicename" or a full TNS alias
