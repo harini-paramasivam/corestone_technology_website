@@ -9,8 +9,12 @@ from typing import Any
 import httpx
 
 from app.core.config import get_settings
-from app.models.lead import CustomerLead, DemoRequest, WhatsAppDirection, WhatsAppMessage
-from app.repositories.lead_repository import LeadRepository
+from app.models.lead import (
+    CustomerLead,
+    DemoRequest,
+    WhatsAppDirection,
+    WhatsAppMessage,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -173,6 +177,6 @@ class WhatsAppService:
             )
             self.db.add(record)
             self.db.commit()
-        except Exception as err:
+        except Exception as err:  # noqa: BLE001
             self.db.rollback()
             logger.error(f"Could not save WhatsAppMessage log record: {err}")

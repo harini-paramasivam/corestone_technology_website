@@ -6,6 +6,7 @@ without blocking on SMTP delivery.
 """
 import logging
 import threading
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -14,9 +15,9 @@ from app.db.session import get_session_factory
 from app.models.lead import CustomerLead, DemoRequest, LeadSource
 from app.repositories.lead_repository import DemoRequestRepository, LeadRepository
 from app.schemas.lead import DemoRequestCreate, LeadCreate
+from app.services.email_service import EmailService
 from app.services.pdf_service import PDFService
 from app.services.whatsapp_service import WhatsAppService
-from app.services.email_service import EmailService
 from app.utils.lead_id import generate_lead_id
 
 logger = logging.getLogger(__name__)
@@ -58,7 +59,7 @@ def _send_notifications_background(
             f"BG_WHATSAPP lead_id={lead_id_str} "
             f"status={wa_result.get('whatsapp_status')}"
         )
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         logger.error(f"BG_NOTIFICATION_EXCEPTION lead_id_db={lead_db_id} error={exc}")
     finally:
         db.close()

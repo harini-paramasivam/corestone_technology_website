@@ -5,12 +5,19 @@ and Demo Requests.
 """
 import io
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import (
+    HRFlowable,
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
 from app.models.lead import CustomerLead, DemoRequest
 
@@ -83,7 +90,7 @@ class PDFService:
         # Title
         elements.append(Paragraph("NEW CONTACT FORM ENQUIRY", section_style))
 
-        submitted_at = lead.created_at.strftime("%d-%b-%Y %I:%M %p") if lead.created_at else datetime.now().strftime("%d-%b-%Y %I:%M %p")
+        submitted_at = lead.created_at.strftime("%d-%b-%Y %I:%M %p") if lead.created_at else datetime.now(timezone.utc).strftime("%d-%b-%Y %I:%M %p")
 
         data = [
             [Paragraph("Lead ID:", cell_bold), Paragraph(lead.lead_id, cell_text)],
@@ -180,7 +187,7 @@ class PDFService:
         # Title
         elements.append(Paragraph("NEW DEMO REQUEST SPECIFICATION", section_style))
 
-        submitted_at = lead.created_at.strftime("%d-%b-%Y %I:%M %p") if lead.created_at else datetime.now().strftime("%d-%b-%Y %I:%M %p")
+        submitted_at = lead.created_at.strftime("%d-%b-%Y %I:%M %p") if lead.created_at else datetime.now(timezone.utc).strftime("%d-%b-%Y %I:%M %p")
         demo_date = demo.preferred_demo_date.strftime("%d-%b-%Y") if demo.preferred_demo_date else "N/A"
 
         data = [

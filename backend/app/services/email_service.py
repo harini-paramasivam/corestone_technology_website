@@ -6,10 +6,10 @@ No third-party library needed — only requires SMTP credentials in .env.
 """
 import logging
 import smtplib
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 from typing import Any
 
 from app.core.config import get_settings
@@ -174,7 +174,7 @@ class EmailService:
                 "message": f"Email notification sent to {notify_email}.",
             }
 
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.error(f"EMAIL_SEND_FAILED lead_id={lead.lead_id} error={exc}")
             return {
                 "email_sent": False,
