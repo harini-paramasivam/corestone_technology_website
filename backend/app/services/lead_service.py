@@ -97,10 +97,10 @@ class LeadService:
             )
             self.db.commit()
             self.db.refresh(lead)
-            logger.info(f"ORACLE_SAVE_SUCCESS lead_id={lead.lead_id} id={lead.id}")
+            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} id={lead.id}")
         except IntegrityError as err:
             self.db.rollback()
-            logger.error(f"ORACLE_SAVE_FAILED lead_id={lead_id} error={err}")
+            logger.error(f"DB_SAVE_FAILED lead_id={lead_id} error={err}")
             raise ConflictError("A lead with this information could not be saved. Please try again.")
 
         # Generate PDF synchronously (fast — ~10ms)
@@ -150,10 +150,10 @@ class LeadService:
             self.db.commit()
             self.db.refresh(lead)
             self.db.refresh(demo_request)
-            logger.info(f"ORACLE_SAVE_SUCCESS lead_id={lead.lead_id} demo_id={demo_request.id}")
+            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} demo_id={demo_request.id}")
         except IntegrityError as err:
             self.db.rollback()
-            logger.error(f"ORACLE_SAVE_FAILED lead_id={lead_id} error={err}")
+            logger.error(f"DB_SAVE_FAILED lead_id={lead_id} error={err}")
             raise ConflictError("This demo request could not be saved. Please try again.")
 
         # Generate PDF synchronously (fast — ~10ms)
