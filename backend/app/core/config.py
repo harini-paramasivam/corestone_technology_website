@@ -56,12 +56,19 @@ class Settings(BaseSettings):
     WHATSAPP_ACCESS_TOKEN: str = ""
     WHATSAPP_PHONE_NUMBER_ID: str = ""
 
-    # --- Email Notification (Gmail SMTP) ---
+    # --- Email Notification (Resend HTTP API) ---
+    # Render blocks outbound SMTP ports (25/465/587) on free-tier web services,
+    # so email is sent via Resend's HTTPS API instead of smtplib/SMTP.
+    RESEND_API_KEY: str = ""                     # From https://resend.com/api-keys
+    RESEND_FROM_EMAIL: str = "CoreStone Technologies <onboarding@resend.dev>"
+    NOTIFICATION_EMAIL: str = "corestonetech2026@gmail.com"  # Inbox that receives leads
+
+    # --- Legacy Gmail SMTP settings (unused now, kept only so old .env files
+    # with these keys don't fail to load; safe to delete once confirmed unused) ---
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
-    SMTP_USER: str = ""          # Your Gmail: corestonetech2026@gmail.com
-    SMTP_PASSWORD: str = ""      # Gmail App Password (16-char, not your login password)
-    NOTIFICATION_EMAIL: str = "corestonetech2026@gmail.com"  # Inbox that receives leads
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
 
     # --- Admin bootstrap (seed data only, never used for auth directly) ---
     ADMIN_DEFAULT_EMAIL: str = "corestonetech2026@gmail.com"

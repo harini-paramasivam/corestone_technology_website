@@ -1,19 +1,24 @@
 """
 Email Notification Service — sends formatted HTML email alerts to the
 CoreStone admin email (NOTIFICATION_EMAIL) whenever a Contact Form or
-Demo Request is submitted. Uses Python's built-in smtplib with Gmail SMTP.
-No third-party library needed — only requires SMTP credentials in .env.
+Demo Request is submitted.
+
+Sent via Resend's HTTPS API (https://api.resend.com/emails) rather than
+raw SMTP: Render blocks outbound SMTP ports (25/465/587) on free-tier web
+services, which made smtplib fail with "[Errno 101] Network is unreachable"
+in production even though it worked locally. HTTPS on port 443 is never
+blocked, so this transport works identically on free and paid Render plans.
 """
+import base64
 import logging
-import smtplib
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import Any
+
+import httpx
 
 from app.core.config import get_settings
 from app.models.lead import CustomerLead, DemoRequest
+
+RESEND_API_URL = "https://api.resend.com/emails"
 
 logger = logging.getLogger(__name__)
 
@@ -119,21 +124,20 @@ class EmailService:
         pdf_bytes: bytes | None = None,
     ) -> dict[str, Any]:
         """
-        Sends a formatted HTML email to NOTIFICATION_EMAIL via Gmail SMTP.
-        Returns a result dict with email_sent and email_status.
+        Sends a formatted HTML email to NOTIFICATION_EMAIL via the Resend
+        HTTPS API. Returns a result dict with email_sent and email_status.
         """
-        smtp_host = self.settings.SMTP_HOST.strip() if self.settings.SMTP_HOST else ""
-        smtp_user = self.settings.SMTP_USER.strip() if self.settings.SMTP_USER else ""
-        smtp_pass = self.settings.SMTP_PASSWORD.strip() if self.settings.SMTP_PASSWORD else ""
+        api_key = self.settings.RESEND_API_KEY.strip() if self.settings.RESEND_API_KEY else ""
+        from_email = self.settings.RESEND_FROM_EMAIL.strip() if self.settings.RESEND_FROM_EMAIL else ""
         notify_email = self.settings.NOTIFICATION_EMAIL.strip() if self.settings.NOTIFICATION_EMAIL else ""
 
-        if not smtp_host or not smtp_user or not smtp_pass or not notify_email:
+        if not api_key or not from_email or not notify_email:
             logger.warning(
                 f"EMAIL_NOT_CONFIGURED lead_id={lead.lead_id} "
-                f"reason='SMTP_HOST/SMTP_USER/SMTP_PASSWORD/NOTIFICATION_EMAIL missing in .env'"
+                f"reason='RESEND_API_KEY/RESEND_FROM_EMAIL/NOTIFICATION_EMAIL missing in .env'"
             )
             return {"email_sent": False, "email_status": "NOT_CONFIGURED",
-                    "message": "Email SMTP is not configured in .env."}
+                    "message": "Resend email API is not configured in .env."}
 
         try:
             if demo:
@@ -145,35 +149,49 @@ class EmailService:
                 html_body = self._build_contact_html(lead)
                 pdf_filename = f"contact_enquiry_{lead.lead_id}.pdf"
 
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = subject
-            msg["From"] = smtp_user
-            msg["To"] = notify_email
-            msg.attach(MIMEText(html_body, "html"))
+            payload: dict[str, Any] = {
+                "from": from_email,
+                "to": [notify_email],
+                "subject": subject,
+                "html": html_body,
+            }
 
-            # Attach PDF if generated
+            # Attach PDF if generated (Resend expects base64-encoded content)
             if pdf_bytes:
-                attachment = MIMEBase("application", "pdf")
-                attachment.set_payload(pdf_bytes)
-                encoders.encode_base64(attachment)
-                attachment.add_header("Content-Disposition", f'attachment; filename="{pdf_filename}"')
-                msg.attach(attachment)
+                payload["attachments"] = [{
+                    "filename": pdf_filename,
+                    "content": base64.b64encode(pdf_bytes).decode("ascii"),
+                }]
 
-            # Send via Gmail SMTP (TLS)
-            smtp_port = int(self.settings.SMTP_PORT) if self.settings.SMTP_PORT else 587
-            with smtplib.SMTP(smtp_host, smtp_port, timeout=15) as server:
-                server.ehlo()
-                server.starttls()
-                server.login(smtp_user, smtp_pass)
-                server.sendmail(smtp_user, notify_email, msg.as_string())
+            response = httpx.post(
+                RESEND_API_URL,
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=15,
+            )
+            response.raise_for_status()
+            resend_id = response.json().get("id")
 
-            logger.info(f"EMAIL_SENT_SUCCESS lead_id={lead.lead_id} to={notify_email}")
+            logger.info(f"EMAIL_SENT_SUCCESS lead_id={lead.lead_id} to={notify_email} resend_id={resend_id}")
             return {
                 "email_sent": True,
                 "email_status": "SENT",
                 "message": f"Email notification sent to {notify_email}.",
             }
 
+        except httpx.HTTPStatusError as exc:
+            logger.error(
+                f"EMAIL_SEND_FAILED lead_id={lead.lead_id} "
+                f"status={exc.response.status_code} error={exc.response.text}"
+            )
+            return {
+                "email_sent": False,
+                "email_status": "FAILED",
+                "message": f"Email delivery failed: {exc.response.text}",
+            }
         except Exception as exc:  # noqa: BLE001
             logger.error(f"EMAIL_SEND_FAILED lead_id={lead.lead_id} error={exc}")
             return {
