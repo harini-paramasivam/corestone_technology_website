@@ -10,12 +10,12 @@ import threading
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.core.exceptions import ConflictError
 from app.db.session import get_session_factory
 from app.models.lead import CustomerLead, DemoRequest, LeadSource
 from app.repositories.lead_repository import DemoRequestRepository, LeadRepository
 from app.schemas.lead import DemoRequestCreate, LeadCreate
-from app.services.email_service import EmailService
 from app.services.pdf_service import PDFService
 from app.services.whatsapp_service import WhatsAppService
 from app.utils.lead_id import generate_lead_id
@@ -43,14 +43,8 @@ def _send_notifications_background(
         demo = lead.demo_request
         lead_id_str = lead.lead_id
 
-        # 1. Send Email Notification via SMTP
-        email_svc = EmailService()
-        email_result = email_svc.send_notification(lead=lead, demo=demo, pdf_bytes=pdf_bytes)
-        logger.info(
-            f"BG_EMAIL lead_id={lead_id_str} "
-            f"status={email_result.get('email_status')} "
-            f"sent={email_result.get('email_sent')}"
-        )
+        # 1. Email sending disabled per APEX database storage requirements (no Resend/SMTP email)
+        logger.info(f"BG_EMAIL_SKIPPED lead_id={lead_id_str} (email disabled per configuration)")
 
         # 2. Programmatic WhatsApp Delivery
         wa_svc = WhatsAppService(db)
@@ -97,7 +91,7 @@ class LeadService:
             )
             self.db.commit()
             self.db.refresh(lead)
-            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} id={lead.id}")
+            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} id={lead.id} apex_url={get_settings().APEX_ADMIN_URL}")
         except IntegrityError as err:
             self.db.rollback()
             logger.error(f"DB_SAVE_FAILED lead_id={lead_id} error={err}")
@@ -150,7 +144,7 @@ class LeadService:
             self.db.commit()
             self.db.refresh(lead)
             self.db.refresh(demo_request)
-            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} demo_id={demo_request.id}")
+            logger.info(f"DB_SAVE_SUCCESS lead_id={lead.lead_id} demo_id={demo_request.id} apex_url={get_settings().APEX_ADMIN_URL}")
         except IntegrityError as err:
             self.db.rollback()
             logger.error(f"DB_SAVE_FAILED lead_id={lead_id} error={err}")
