@@ -26,10 +26,10 @@ export default function WhatsAppButton() {
       transition={{ delay: 0.6, duration: 0.4, ease: 'easeOut' }}
       whileHover={{ scale: 1.06 }}
       whileTap={{ scale: 0.95 }}
-      className="fixed bottom-6 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lifted"
+      className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lifted"
     >
       <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30" aria-hidden="true" />
-      <MessageCircle className="h-6 w-6 relative" fill="white" strokeWidth={0} aria-hidden="true" />
+      <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 relative" fill="white" strokeWidth={0} aria-hidden="true" />
     </motion.a>
   )
 }

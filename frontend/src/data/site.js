@@ -343,6 +343,7 @@ export const PRIMARY_NAV = [
   { key: 'nav.home', href: '/' },
   { key: 'nav.solutions', href: '/solutions', megaMenu: 'solutions' },
   { key: 'nav.industries', href: '/industries', megaMenu: 'industries' },
+  { key: 'nav.services', href: '/services' },
   { key: 'nav.whyCoreStone', href: '/why-corestone' },
   { key: 'nav.contact', href: '/contact' },
 ]

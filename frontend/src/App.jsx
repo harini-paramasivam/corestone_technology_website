@@ -11,6 +11,7 @@ import RequestDemo from '@/pages/RequestDemo.jsx'
 import DemoSuccess from '@/pages/DemoSuccess.jsx'
 import NotFound from '@/pages/NotFound.jsx'
 import WhyCoreStone from '@/pages/WhyCoreStone.jsx'
+import Services from '@/pages/Services.jsx'
 
 /**
  * Module 6 scope: Contact, Request Demo (full validated enterprise form)
@@ -31,6 +32,7 @@ function App() {
           <Route path="/request-demo" element={<RequestDemo />} />
           <Route path="/request-demo/success" element={<DemoSuccess />} />
           <Route path="/why-corestone" element={<WhyCoreStone />} />
+          <Route path="/services" element={<Services />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

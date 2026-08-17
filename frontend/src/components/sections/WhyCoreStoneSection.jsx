@@ -45,16 +45,16 @@ export default function WhyCoreStoneSection() {
       </RevealGroup>
 
       <Reveal delay={0.15}>
-        <div className="mt-16 grid grid-cols-2 gap-8 rounded-card bg-ink-950 px-8 py-10 sm:grid-cols-4 shadow-lifted border border-white/10">
+        <div className="mt-12 sm:mt-16 grid grid-cols-2 gap-6 sm:gap-8 rounded-card bg-ink-950 px-6 py-8 sm:px-8 sm:py-10 sm:grid-cols-4 shadow-lifted border border-white/10">
           {STATS.map((stat, i) => (
             <div key={`${language}-${i}`} className="text-center">
               <AnimatedCounter
                 value={stat.value}
                 suffix={stat.suffix}
                 decimals={stat.decimals ?? 0}
-                className="font-display text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-indigo-300 drop-shadow-[0_2px_12px_rgba(56,189,248,0.5)]"
+                className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-indigo-300 drop-shadow-[0_2px_12px_rgba(56,189,248,0.5)]"
               />
-              <p className="mt-2.5 text-xs sm:text-sm font-medium text-ink-300">{statsLabels[i]}</p>
+              <p className="mt-2 text-[11px] sm:text-sm font-medium text-ink-300">{statsLabels[i]}</p>
             </div>
           ))}
         </div>

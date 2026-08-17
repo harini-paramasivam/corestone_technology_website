@@ -34,6 +34,7 @@ export default {
     home: 'Home',
     solutions: 'Solutions',
     industries: 'Industries',
+    services: 'Services',
     whyCoreStone: 'Why CoreStone',
     contact: 'Contact',
     requestDemo: 'Request Demo',

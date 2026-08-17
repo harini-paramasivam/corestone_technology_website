@@ -31,13 +31,9 @@ export default function DemoSuccess() {
         <div className="mt-6 flex items-center gap-3 rounded-xl bg-emerald-50/80 p-4 border border-emerald-200">
           <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
           <div className="text-left text-xs text-emerald-900">
-            <p className="font-bold text-sm text-emerald-950">Demo Request Saved in Database</p>
+            <p className="font-bold text-sm text-emerald-950">Demo Request Submitted Successfully</p>
             <p className="mt-0.5">
-              {whatsappSent
-                ? 'Your request has been stored in Oracle DB and notified to WhatsApp.'
-                : whatsappStatus === 'NOT_CONFIGURED'
-                ? 'Your request has been stored in Oracle DB. (Note: WhatsApp API is not configured on server).'
-                : 'Your request has been stored in Oracle DB. (WhatsApp delivery attempt failed).'}
+              Your request details have been securely recorded and sent to our team.
             </p>
           </div>
         </div>

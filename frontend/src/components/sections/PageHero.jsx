@@ -15,7 +15,7 @@ export default function PageHero({ eyebrow, title, description, breadcrumbs = []
   const { t } = useLanguage()
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-brand-primary-50 to-surface pt-36 pb-16 sm:pb-20 border-b border-ink-100">
+    <section className="relative overflow-hidden bg-gradient-to-b from-brand-primary-50 to-surface pt-28 pb-12 sm:pt-36 sm:pb-16 lg:pb-20 border-b border-ink-100">
       <Container className="relative">
         {breadcrumbs.length > 0 && (
           <nav aria-label={t('common.breadcrumb')} className="mb-6 flex items-center gap-1.5 text-sm text-ink-500">

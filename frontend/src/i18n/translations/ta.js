@@ -32,6 +32,7 @@ export default {
     home: 'முகப்பு',
     solutions: 'தீர்வுகள்',
     industries: 'துறைகள்',
+    services: 'சேவைகள்',
     whyCoreStone: 'ஏன் CoreStone',
     contact: 'தொடர்பு',
     requestDemo: 'டெமோவைக் கோருங்கள்',

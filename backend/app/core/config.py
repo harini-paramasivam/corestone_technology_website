@@ -71,7 +71,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
 
     # --- Oracle APEX Admin Portal ---
-    APEX_ADMIN_URL: str = "https://oracleapex.com/ords/r/ferna_workspace/lead/home"
+    APEX_ADMIN_URL: str = "https://oracleapex.com/ords/r/ferna_workspace/lead13309/home"
 
     # --- Admin bootstrap (seed data only, never used for auth directly) ---
     ADMIN_DEFAULT_EMAIL: str = "corestonetech2026@gmail.com"

@@ -12,8 +12,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-surface border-t border-ink-200 text-ink-900">
-      <Container className="py-16 lg:py-20">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-5">
+      <Container className="py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="col-span-2">
             <Link to="/" className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary-600 font-display text-base font-bold text-white">
@@ -116,7 +116,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`mailto:${COMPANY.email}`}
-                  className="flex items-start gap-2.5 text-sm text-ink-600 transition-colors hover:text-brand-primary-600"
+                  className="flex items-start gap-2.5 text-sm text-ink-600 transition-colors hover:text-brand-primary-600 break-all"
                 >
                   <Mail className="mt-0.5 h-4 w-4 shrink-0" />
                   {COMPANY.email}
