@@ -158,16 +158,12 @@ img, video, svg, canvas {
 /* xs breakpoint utility: ≥ 480px
    Tailwind v4 doesn't ship an xs screen by default,
    so we add manual utilities for the hero CTA row. */
-/* ── Global responsive company email rendering ── */
-.company-email {
-  display: inline-block;
-  max-width: 100%;
-  font-size: clamp(0.72rem, 3.4vw, 0.875rem);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: middle;
+@media (min-width: 480px) {
+  .xs\:flex-row    { flex-direction: row; }
+  .xs\:flex-wrap   { flex-wrap: wrap; }
+  .xs\:items-center{ align-items: center; }
+  .xs\:gap-4       { gap: 1rem; }
+  .xs\:w-auto      { width: auto; }
 }
-
 
 

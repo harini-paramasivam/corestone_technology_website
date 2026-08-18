@@ -133,9 +133,9 @@ export default function Contact() {
                 {href ? (
                   <a
                     href={href}
-                    className="text-sm font-medium text-ink-800 hover:text-brand-primary-700 transition-colors min-w-0 max-w-full"
+                    className="text-sm font-medium text-ink-800 hover:text-brand-primary-700 transition-colors break-all"
                   >
-                    <span className="company-email">{value}</span>
+                    {value}
                   </a>
                 ) : (
                   <p className="text-sm font-medium text-ink-700">{value}</p>
