@@ -76,8 +76,11 @@
   to   { transform: translateX(-50%); }
 }
 
+/* ── Global typography & rendering defaults ── */
 html {
   scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -90,6 +93,18 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-ink-900);
   font-weight: 700;
+  line-height: 1.25;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fluid responsive clamp typography for primary headings */
+.hero-heading {
+  font-size: clamp(1.65rem, 5.5vw, 3.75rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 ::selection {
@@ -143,11 +158,16 @@ img, video, svg, canvas {
 /* xs breakpoint utility: ≥ 480px
    Tailwind v4 doesn't ship an xs screen by default,
    so we add manual utilities for the hero CTA row. */
-@media (min-width: 480px) {
-  .xs\:flex-row    { flex-direction: row; }
-  .xs\:flex-wrap   { flex-wrap: wrap; }
-  .xs\:items-center{ align-items: center; }
-  .xs\:gap-4       { gap: 1rem; }
-  .xs\:w-auto      { width: auto; }
+/* ── Global responsive company email rendering ── */
+.company-email {
+  display: inline-block;
+  max-width: 100%;
+  font-size: clamp(0.72rem, 3.4vw, 0.875rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }
+
+
 

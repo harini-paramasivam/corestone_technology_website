@@ -116,10 +116,10 @@ export default function Footer() {
               <li>
                 <a
                   href={`mailto:${COMPANY.email}`}
-                  className="flex items-start gap-2.5 text-sm text-ink-600 transition-colors hover:text-brand-primary-600 break-all"
+                  className="flex items-center gap-2.5 text-sm text-ink-600 transition-colors hover:text-brand-primary-600 min-w-0"
                 >
                   <Mail className="mt-0.5 h-4 w-4 shrink-0" />
-                  {COMPANY.email}
+                  <span className="company-email">{COMPANY.email}</span>
                 </a>
               </li>
               <li className="flex items-start gap-2.5 text-sm text-ink-600">
