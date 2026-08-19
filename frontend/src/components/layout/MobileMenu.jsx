@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, NavLink } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ChevronRight, ArrowRight } from 'lucide-react'
@@ -8,6 +9,11 @@ import { useLanguage } from '@/i18n/useLanguage.js'
 export default function MobileMenu({ open, onClose }) {
   const { t, language, setLanguage } = useLanguage()
   const firstFocusRef = useRef(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Lock body scroll when menu is open; restore on close/unmount
   useEffect(() => {
@@ -22,21 +28,24 @@ export default function MobileMenu({ open, onClose }) {
     }
   }, [open])
 
-  return (
+  if (!mounted) return null
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[200] flex flex-col bg-surface lg:hidden"
+          key="mobile-menu-overlay"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="fixed inset-0 z-[9999] flex flex-col bg-surface lg:hidden"
           aria-modal="true"
           role="dialog"
           aria-label={t('nav.menu')}
         >
           {/* Top Header Bar */}
-          <div className="flex h-[4.5rem] items-center justify-between border-b border-ink-100 px-4 sm:px-6 shrink-0">
+          <div className="flex h-[4.5rem] items-center justify-between border-b border-ink-100 px-4 sm:px-6 shrink-0 bg-surface">
             {/* Logo */}
             <Link to="/" onClick={onClose} className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary-600 font-display text-base font-bold text-white">
@@ -60,7 +69,7 @@ export default function MobileMenu({ open, onClose }) {
           </div>
 
           {/* Scrollable Body: Nav Links -> Language Toggle -> CTA Buttons */}
-          <div className="flex-1 overflow-y-auto px-4 py-2 sm:px-6 flex flex-col">
+          <div className="flex-1 overflow-y-auto px-4 py-2 sm:px-6 flex flex-col bg-surface">
             {/* Primary Nav List */}
             <nav className="divide-y divide-ink-100" aria-label="Mobile navigation">
               {PRIMARY_NAV.map((item) => (
@@ -83,7 +92,7 @@ export default function MobileMenu({ open, onClose }) {
             </nav>
 
             {/* Bottom Actions Area */}
-            <div className="mt-auto pt-6 pb-6 space-y-6">
+            <div className="mt-auto pt-6 pb-8 space-y-6">
               <hr className="border-ink-100" />
               
               {/* Language Selector */}
@@ -132,6 +141,7 @@ export default function MobileMenu({ open, onClose }) {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
