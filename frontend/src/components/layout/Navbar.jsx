@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
-import { Menu, Phone } from 'lucide-react'
+import { Menu, Phone, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/i18n/useLanguage.js'
 import { PRIMARY_NAV, COMPANY } from '@/data/site.js'
@@ -10,11 +10,30 @@ import LanguageToggle from './LanguageToggle.jsx'
 import MegaMenu from './MegaMenu.jsx'
 import MobileMenu from './MobileMenu.jsx'
 
-/**
- * @param {boolean} transparent - if true, the navbar starts see-through
- *   with light text over a dark hero and solidifies once the page scrolls
- *   past the hero. Pages without a dark hero should leave this false.
- */
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="fixed inset-0 z-[9999] bg-white p-8 overflow-auto">
+          <h1 className="text-red-500 font-bold text-xl">React Crash!</h1>
+          <pre className="text-sm mt-4 text-black">{this.state.error?.toString()}</pre>
+          <pre className="text-xs mt-2 text-gray-500">{this.state.error?.stack}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function Navbar({ transparent = false }) {
   const [scrolled, setScrolled] = useState(false)
   const [openMenu, setOpenMenu] = useState(null)
@@ -152,7 +171,9 @@ export default function Navbar({ transparent = false }) {
         )}
       </AnimatePresence>
     </header>
-    <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+    <ErrorBoundary>
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+    </ErrorBoundary>
     </>
   )
 }
