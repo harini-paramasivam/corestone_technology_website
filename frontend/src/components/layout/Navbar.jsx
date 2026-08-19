@@ -52,6 +52,7 @@ export default function Navbar({ transparent = false }) {
   }
 
   return (
+    <>
     <header
       onMouseLeave={handleLeave}
       className={cn(
@@ -150,8 +151,8 @@ export default function Navbar({ transparent = false }) {
           </div>
         )}
       </AnimatePresence>
-
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>
+    <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
+    </>
   )
 }
