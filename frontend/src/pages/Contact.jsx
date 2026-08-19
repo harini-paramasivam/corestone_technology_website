@@ -133,7 +133,7 @@ export default function Contact() {
                 {href ? (
                   <a
                     href={href}
-                    className="text-sm font-medium text-ink-800 hover:text-brand-primary-700 transition-colors break-all"
+                    className="text-sm font-medium text-ink-800 hover:text-brand-primary-700 transition-colors whitespace-nowrap"
                   >
                     {value}
                   </a>
