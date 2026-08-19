@@ -107,6 +107,16 @@ h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
 }
 
+/* Adjustments for Tamil to match English visual metrics */
+/* Tamil system fonts have massive vertical bounding boxes. Scaling down the root font size scales down everything (text, padding, etc) uniformly in rems */
+html:lang(ta) {
+  font-size: 14px;
+}
+:lang(ta) .hero-heading {
+  font-size: clamp(1.4rem, 5vw, 3.1rem);
+  line-height: 1.15;
+}
+
 ::selection {
   background: var(--color-brand-primary-200);
   color: var(--color-ink-950);
