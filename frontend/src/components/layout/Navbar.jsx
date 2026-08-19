@@ -132,14 +132,14 @@ export default function Navbar({ transparent = false }) {
 
         <button
           type="button"
-          onClick={() => setMobileOpen(true)}
-          aria-label={t('nav.openMenu')}
+          onClick={() => setMobileOpen((prev) => !prev)}
+          aria-label={mobileOpen ? t('nav.closeMenu') : t('nav.openMenu')}
           className={cn(
-            'lg:hidden rounded-full p-2',
+            'lg:hidden rounded-full p-2 transition-colors',
             solid ? 'text-ink-700 hover:bg-ink-100' : 'text-white hover:bg-white/10'
           )}
         >
-          <Menu className="h-6 w-6" />
+          {mobileOpen ? <X className="h-6 w-6 text-brand-primary-600" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
