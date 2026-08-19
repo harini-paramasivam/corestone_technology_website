@@ -36,7 +36,7 @@ export default function SampleDashboardPreview({ industryName }) {
                 <p className="font-display text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]">
                   {['₹68,400', '₹12.4L', '24', '3'][i]}
                 </p>
-                <p className="mt-1 text-xs font-medium text-ink-300">{label}</p>
+                <p className="mt-1 text-xs font-medium text-ink-200">{label}</p>
               </div>
             ))}
           </div>

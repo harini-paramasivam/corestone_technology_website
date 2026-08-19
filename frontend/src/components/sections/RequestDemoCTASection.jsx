@@ -22,7 +22,7 @@ export default function RequestDemoCTASection() {
         <Heading as="h2" size="h1" className="!text-white">
           {t('home.ctaHeading')}
         </Heading>
-        <p className="mt-4 text-ink-300">
+        <p className="mt-4 text-ink-200">
           {t('home.ctaSubhead')}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">

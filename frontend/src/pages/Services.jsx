@@ -462,7 +462,7 @@ export default function Services() {
           <h2 className="font-display text-3xl font-extrabold text-white sm:text-4xl">
             {content.cta.heading}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-ink-300 leading-relaxed">
+          <p className="mx-auto mt-4 max-w-xl text-ink-200 leading-relaxed">
             {content.cta.subhead}
           </p>
 

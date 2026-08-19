@@ -53,7 +53,7 @@ export default function DashboardShowcaseSection() {
                   <p className="mt-3 font-display text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">
                     {kpi.value}
                   </p>
-                  <p className="mt-0.5 text-xs font-medium text-ink-300">{kpi.label}</p>
+                  <p className="mt-0.5 text-xs font-medium text-ink-200">{kpi.label}</p>
                 </div>
               ))}
             </div>

@@ -54,7 +54,7 @@ export default function WhyCoreStoneSection() {
                 decimals={stat.decimals ?? 0}
                 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-400 to-indigo-300 drop-shadow-[0_2px_12px_rgba(56,189,248,0.5)]"
               />
-              <p className="mt-2 text-[11px] sm:text-sm font-medium text-ink-300">{statsLabels[i]}</p>
+              <p className="mt-2 text-[11px] sm:text-sm font-medium text-ink-200">{statsLabels[i]}</p>
             </div>
           ))}
         </div>

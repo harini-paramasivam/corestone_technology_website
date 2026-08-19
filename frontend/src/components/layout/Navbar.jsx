@@ -138,7 +138,7 @@ export default function Navbar({ transparent = false }) {
           <a
             href={`tel:${COMPANY.phoneRaw}`}
             className={cn(
-              'flex items-center gap-1.5 text-sm font-medium transition-colors',
+              'flex items-center gap-1.5 text-sm font-medium transition-colors whitespace-nowrap shrink-0',
               solid ? 'text-ink-600 hover:text-brand-primary-600' : 'text-white/85 hover:text-white'
             )}
           >
